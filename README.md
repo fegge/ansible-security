@@ -13,7 +13,7 @@ Updates `/etc/ssh/sshd_conf` to disable password authentication and root login.
 Installs `fail2ban` with default settings.
 
 ## Automatic Security Updates
-Installs `unattended-upgrades` with minimal settings.
+Installs `unattended-upgrades` with minimal settings and adds `Ubuntu xenial-security` to allowed origins.
 
 ## Logging SSH Access
 Installs `'monit` and updates the update interval to 5 seconds.
