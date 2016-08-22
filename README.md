@@ -16,6 +16,6 @@ Installs `fail2ban` with default settings.
 Installs `unattended-upgrades` with minimal settings and adds `Ubuntu xenial-security` to allowed origins.
 
 ## Logging SSH Access
-Installs `'monit` and updates the update interval to 5 seconds.
+Installs `monit` and updates the update interval to 5 seconds.
 
-Adds a rule which checks for `Accepted publickey` in the log file `'/var/log/auth.log`. If the rule fires, it runs a script which posts server name, user name, and source IP to Slack. 
+Adds a rule which checks for `Accepted publickey` in the log file `/var/log/auth.log`. If the rule fires, it runs a script which posts server name, user name, and source IP to Slack. 
