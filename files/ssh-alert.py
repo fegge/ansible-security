@@ -1,12 +1,9 @@
 #! /usr/bin/env python
+import optparse
 import requests
 import socket
 import json
 import os
-
-
-WEBHOOK_CHANNEL = '#admin'
-WEBHOOK_URL     = 'https://hooks.slack.com/services/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'
 
 
 def _get_address(description):
@@ -20,12 +17,26 @@ def _get_user(description):
     end = description.index('from') - 1
     return description[begin: end]
 
+
+def _get_options():
+    parser = optparse.OptionParser()
+    parser.add_option(
+        "--webhook-url",
+        dest="webhook_url",
+        default=None,
+        help="slack webhook url"
+    )
+    options, _ = parser.parse_args()
+    if options.webhook_url is None:
+        parser.error("mandatory argument missing")
+    return options.webhook_url
+
 def _format_alert():
     hostname = socket.gethostname().title()
     fallback = 'Successful login to %s.' % hostname    
     try:
-        user      = _get_user(os.environ['MONIT_DESCRIPTION'])
-        address   = _get_address(os.environ['MONIT_DESCRIPTION'])
+        user = _get_user(os.environ['MONIT_DESCRIPTION'])
+        address = _get_address(os.environ['MONIT_DESCRIPTION'])
         timestamp = os.environ['MONIT_DATE']
         value = '%s logged in as %s.\n%s' % (address, user, timestamp)
     except:
@@ -44,10 +55,11 @@ def _format_alert():
             'fields': fields
         }
     ]
-    data = {'channel': WEBHOOK_CHANNEL, 'attachments': attachments}
+    data = {'attachments': attachments}
     return json.dumps(data)
 
 if __name__ == '__main__':
     data = _format_alert()
-    response = requests.post(WEBHOOK_URL, data=data)
+    webhook_url = _get_webhook_url()
+    response = requests.post(webhook_url, data=data)
     response.raise_for_status()
