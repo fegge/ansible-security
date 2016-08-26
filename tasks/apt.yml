@@ -1,0 +1,19 @@
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: Update package cache
+      apt: update_cache=yes cache_valid_time=3600
+
+    - name: Upgrade system
+      apt: upgrade=dist
+
+    - name: Install required packages
+      apt: name={{item}} state=installed
+      with_items: "{{ubuntu_package_list}}"
+
+    - name: Adjust automatic update intervals
+      copy: src=10periodic dest=/etc/apt/apt.conf.d/10periodic
+
+    - name: Automate security updates only
+      copy: src=50unattended-upgrades dest=/etc/apt/apt.conf.d/50unattended-upgrades

@@ -1,0 +1,11 @@
+ubuntu_package_list:
+  - ufw
+  - emacs
+  - monit
+  - fail2ban
+  - python-pip
+  - python-virtualenv
+  - unattended-upgrades
+
+python_module_list:
+  - requests
