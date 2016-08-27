@@ -5,8 +5,5 @@
   copy: src=ssh-logins.conf dest=/etc/monit/conf.d/ssh-logins
 
 - name: Update monit update interval
-  lineinfile: dest=/etc/monit/monitrc
-  regexp="^set daemon"
-  line="set daemon 5"
-  state=present
+  lineinfile: dest=/etc/monit/monitrc regexp="^set daemon" line="set daemon 5" state=present
   notify: restart monit
