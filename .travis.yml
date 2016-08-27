@@ -1,34 +1,19 @@
 language: python
-python: "2.7"
-
+python: '2.7'
 env:
-  - SITE=test.yml
-
+- SITE=test.yml
 before_install:
-  - sudo apt-get update -qq
-  
-
+- sudo apt-get update -qq
 install:
-  # Install Ansible.
-  - sudo apt-get -y install python-simplejson
-  - pip install ansible
-
-  # Add ansible.cfg to pick up roles path.
-  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
-
+- sudo apt-get -y install python-simplejson
+- pip install ansible
+- '{ echo ''[defaults]''; echo ''roles_path = ../''; } >> ansible.cfg'
 script:
-  # Check playbook syntax
-  - "ansible-playbook -i tests/inventory tests/$SITE --syntax-check"
-
-  # Run the playbook once
-  - "ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo"
-
-  # Rerun the playbook again and verify idempotency
-  - >
-    ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
-    | grep -q 'changed=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
-
+- ansible-playbook -i tests/inventory tests/$SITE --syntax-check
+- ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
+- |
+  ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo | grep -q 'changed=0.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
+  slack:
+    secure: e678pfBWPOrFlfAMnYVNBl3B2ZIKZVOcUAFmbYXXGNOfzTrE1cEVw2pHxM7PfRPLxU+bNI2oV3WyDQBJYFZwhxteU1bXkrCatQ8Z6FSHA0iQ1cIzjcr7JRrMLwNo6Eur1FntX2378g2g6ADodoGmYKKiVcOs5BE3crpFcc+DiZLVigYNvgqdhE7U9tXoolFdM2kCXzDlIkdUKVCGDBVhyQlKseooJZYVq+kitGAWnditIqQ5cqYEi+QSSqbQqqf999rgz3qbPflvFGSbdvw5UbInLQLhb1oSuiuzsX4phKNQ6wP1L3T1O62KHzsBKySA1T9A1LKzNG918Hvve0Fbryece1XlDV/8Z0BwDy0+kymF3ktcp4W8JZeLNosMxJr/zNl4ViXhVQGj9sGgHcgJaHZQQKwLlwO98zXOC7TZipZkXK6Nr+L1jVdL+lH12j0yqXNs5gL1yhiLX9r75h49CFTPUfElSOgHxz08WA35g57pixk4512T5pLT5RBOqU01/a2ZGfkCccnQuES7aoBc/3NRPwg+qvdmAZQZFtUT8YbZuc5tJ0Pg2bhBnDYLGyfaf0+AE/T6xL/EIcKaPcnZopr8AVwuVV1Z1X1rnBHEuTiLvKn/DvWOfW3vF5SMnSUyEthdxgKhjl/lTx1/o7Ko63JyRjOLGn5ZX6wZz9AXBqA=
