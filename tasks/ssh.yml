@@ -1,26 +1,22 @@
-- hosts: all
-  become: yes
-  
-  tasks:
-    - name: Setup ufw
-      ufw: state=enabled policy=deny
+- name: Setup ufw
+  ufw: state=enabled policy=deny
 
-    - name: Allow SSH traffic
-      ufw: rule=allow port=22 proto=tcp
+- name: Allow SSH traffic
+  ufw: rule=allow port=22 proto=tcp
       
-    - name: Ensure fail2ban is enabled
-      service: name=fail2ban state=started enabled=yes
+- name: Ensure fail2ban is enabled
+  service: name=fail2ban state=started enabled=yes
 
-    - name: Disallow password authentication
-      lineinfile: dest=/etc/ssh/sshd_config
-                  regexp="^PasswordAuthentication"
-                  line="PasswordAuthentication no"
-                  state=present
-      notify: restart ssh
+- name: Disallow password authentication
+  lineinfile: dest=/etc/ssh/sshd_config
+  regexp="^PasswordAuthentication"
+  line="PasswordAuthentication no"
+  state=present
+  notify: restart ssh
 
-    - name: Disallow root SSH access
-      lineinfile: dest=/etc/ssh/sshd_config
-                  regexp="^PermitRootLogin"
-                  line="PermitRootLogin no"
-                  state=present
-      notify: restart ssh
+- name: Disallow root SSH access
+  lineinfile: dest=/etc/ssh/sshd_config
+  regexp="^PermitRootLogin"
+  line="PermitRootLogin no"
+  state=present
+  notify: restart ssh

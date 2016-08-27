@@ -1,16 +1,12 @@
-- hosts: all
-  become: yes
-  
-  tasks:
-    - name: Copy monit alert script
-      copy: src=ssh-alert.py dest=/etc/monit/ssh-alert.py mode="u=rx"
+- name: Copy monit alert script
+  copy: src=ssh-alert.py dest=/etc/monit/ssh-alert.py mode="u=rx"
 
-    - name: Copy monit ssh login configuration 
-      copy: src=ssh-logins.conf dest=/etc/monit/conf.d/ssh-logins
+- name: Copy monit ssh login configuration 
+  copy: src=ssh-logins.conf dest=/etc/monit/conf.d/ssh-logins
 
-    - name: Update monit update interval
-      lineinfile: dest=/etc/monit/monitrc
-                  regexp="^set daemon"
-                  line="set daemon 5"
-                  state=present
-      notify: restart monit
+- name: Update monit update interval
+  lineinfile: dest=/etc/monit/monitrc
+  regexp="^set daemon"
+  line="set daemon 5"
+  state=present
+  notify: restart monit

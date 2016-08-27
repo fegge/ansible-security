@@ -1,20 +1,8 @@
-- hosts: all
-  become: yes
-  gather_facts: no
+- include: apt.yml
 
-  pre_tasks:
-    - name: Install Python 2
-      raw: sudo apt-get -y install python-simplejson
-
-  tasks:
-    - name: Gathering facts
-      setup:
+- include: pip.yml
     
-    - include: apt.yml
+- include: ssh.yml
     
-    - include: pip.yml
-    
-    - include: ssh.yml
-    
-    - include: monit.yml
-      when: not (slack_webhook == "")
+- include: monit.yml
+  when: not (slack_webhook == "")
