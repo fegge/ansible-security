@@ -18,4 +18,7 @@ Installs `unattended-upgrades` with minimal settings and adds `Ubuntu xenial-sec
 ## Logging SSH Access
 Installs `monit` and updates the update interval to 5 seconds.
 
-Adds a rule which checks for `Accepted publickey` in the log file `/var/log/auth.log`. If the rule fires, it runs a script which posts server name, user name, and source IP to Slack. 
+Adds a rule which checks for `Accepted publickey` in the log file `/var/log/auth.log`. If the rule fires, it runs a script which posts server name, user name, and source IP to Slack.
+
+# Build status
+[![Build Status](https://travis-ci.org/fegge/ansible-security.svg?branch=master)](https://travis-ci.org/fegge/ansible-security)
