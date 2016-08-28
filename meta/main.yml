@@ -1,0 +1,14 @@
+galaxy_info:
+  author: Fredrik Dahlgren
+  description: Provides Ubuntu server hardening
+  license: license GPLv2
+  min_ansible_version: 1.2
+  platforms:
+    - name: Ubuntu
+      versions:
+      - all
+  galaxy_tags:
+    - security
+    - hardening
+    
+dependencies: []
