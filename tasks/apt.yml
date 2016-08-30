@@ -12,4 +12,4 @@
   copy: src=10periodic dest=/etc/apt/apt.conf.d/10periodic
 
 - name: Automate security updates only
-  copy: src=50unattended-upgrades dest=/etc/apt/apt.conf.d/50unattended-upgrades
+  template: src=50unattended-upgrades dest=/etc/apt/apt.conf.d/50unattended-upgrades
