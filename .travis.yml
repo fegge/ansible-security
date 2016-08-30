@@ -1,24 +1,21 @@
 language: python
 python: '2.7'
 env:
-  - SITE=test.yml
-
+- SITE=test.yml
 before_install:
-  - sudo apt-get update -qq
-
+- sudo apt-get update -qq
 install:
-  - sudo apt-get -y install python-simplejson
-  - pip install ansible
-  - '{ echo ''[defaults]''; echo ''roles_path = ../''; } >> ansible.cfg'
-
+- sudo apt-get -y install python-simplejson
+- pip install ansible
+- '{ echo ''[defaults]''; echo ''roles_path = ../''; } >> ansible.cfg'
 script:
-  - ansible-playbook -i tests/inventory tests/$SITE --syntax-check
-  - ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
-  - ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo | grep -q 'changed=0.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
-  # - grep 'PasswordAuthentication no' /etc/ssh/sshd_config
-  # - grep 'PermitRootLogin no' /etc/ssh/sshd_config
-  # - service --status-all | grep ufw
-
+- ansible-playbook -i tests/inventory tests/$SITE --syntax-check
+- ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
+- |
+  ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo | grep -q 'changed=0.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
+- grep 'PasswordAuthentication no' /etc/ssh/sshd_config
+- grep 'PermitRootLogin no' /etc/ssh/sshd_config
+- service --status-all | grep ufw
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
   slack:
