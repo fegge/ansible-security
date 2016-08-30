@@ -15,9 +15,9 @@ script:
   - ansible-playbook -i tests/inventory tests/$SITE --syntax-check
   - ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
   - ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo | grep -q 'changed=0.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
-  - grep 'PasswordAuthentication no' /etc/ssh/sshd_config
-  - grep 'PermitRootLogin no' /etc/ssh/sshd_config
-  - service --status-all | grep ufw
+  # - grep 'PasswordAuthentication no' /etc/ssh/sshd_config
+  # - grep 'PermitRootLogin no' /etc/ssh/sshd_config
+  # - service --status-all | grep ufw
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
