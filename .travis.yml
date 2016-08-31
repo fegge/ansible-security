@@ -17,7 +17,7 @@ script:
 - grep 'PermitRootLogin no' /etc/ssh/sshd_config
 - grep "Ubuntu `lsb_release -sc`-security" /etc/apt/apt.conf.d/50unattended-upgrades
 - sudo ufw status | grep -w active
-- python -m py_compile /etc/monit/ssh-alert.py
+- test -e /etc/monit/ssh-alert.py && (python -m py_compile /etc/monit/ssh-alert.py) || (echo 'Skipping ssh-alert.py syntax verification')
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
   slack:
