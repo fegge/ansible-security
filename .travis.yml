@@ -17,6 +17,7 @@ script:
 - grep 'PermitRootLogin no' /etc/ssh/sshd_config
 - grep "Ubuntu `lsb_release -sc`-security" /etc/apt/apt.conf.d/50unattended-upgrades
 - sudo ufw status | grep -w active
+- python -m py_compile /etc/monit/ssh-alert.py
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
   slack:
