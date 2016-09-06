@@ -1,0 +1,40 @@
+- name: Restrict core dumps (with sysctl)
+  sysctl: name=fs.suid_dumpable value=0 ignoreerrors=yes sysctl_set=yes reload=yes state=present
+
+- name: Disable source routed packet acceptance
+  sysctl: name="{{item}}" value=0 ignoreerrors=yes sysctl_set=yes reload=yes state=present
+  with_items:
+    - net.ipv4.conf.all.accept_source_route
+    - net.ipv4.conf.default.accept_source_route
+  notify:
+    - flush routing cache
+
+- name: Disable ICMP redirect acceptance
+  sysctl: name="{{item}}" value=0 ignoreerrors=yes sysctl_set=yes reload=yes state=present
+  with_items:
+    - net.ipv4.conf.all.accept_redirects
+    - net.ipv4.conf.default.accept_redirects
+
+- name: Disable secure ICMP redirect acceptance
+  sysctl: name="{{item}}" value=0 ignoreerrors=yes sysctl_set=yes reload=yes state=present
+  with_items:
+    - net.ipv4.conf.all.secure_redirects
+    - net.ipv4.conf.default.secure_redirects
+  notify:
+    - flush routing cache
+
+- name: Enable bad error message protection
+  sysctl: name=net.ipv4.icmp_ignore_bogus_error_responses value=1 ignoreerrors=yes sysctl_set=yes reload=yes state=present
+  notify:
+    - flush routing cache
+
+- name: Enable source route validation
+  sysctl: name="{{item}}" value=1 ignoreerrors=yes sysctl_set=yes reload=yes state=present
+  with_items:
+    - net.ipv4.conf.all.rp_filter
+    - net.ipv4.conf.default.rp_filter
+  notify:
+    - flush routing cache
+
+- name: Do not send ICMP redirects
+  sysctl: name=net.ipv4.conf.all.send_redirects value=0

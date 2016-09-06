@@ -7,10 +7,7 @@
 - name: Ensure fail2ban is enabled
   service: name=fail2ban state=started enabled=yes
 
-- name: Disallow password authentication
-  lineinfile: dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
-  notify: restart ssh
-
-- name: Disallow root SSH access
-  lineinfile: dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
-  notify: restart ssh
+- name: Copy SSH configuration to host
+  template: src=sshd_config.j2 dest=/etc/ssh/sshd_config owner=root group=root mode=0644
+  notify:
+    - restart ssh

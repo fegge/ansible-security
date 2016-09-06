@@ -1,0 +1,47 @@
+Port 22
+# ListenAddress ::
+# ListenAddress 0.0.0.0
+Protocol 2
+
+# LogLevel VERBOSE logs user's key fingerprint on login.
+# Needed to have a clear audit log of which keys were used to log in.
+SyslogFacility AUTH
+LogLevel VERBOSE
+
+# Use kernel sandbox mechanisms where possible
+# Systrace on OpenBSD, Seccomp on Linux, seatbelt on MacOSX/Darwin, rlimit elsewhere.
+UsePrivilegeSeparation sandbox
+
+# Handy for keeping network connections alive
+TCPKeepAlive yes
+ClientAliveInterval 120
+
+# Authentication
+UsePAM yes
+PermitRootLogin without-password
+StrictModes yes
+PubkeyAuthentication yes
+AcceptEnv LANG LC_*
+
+# Turn off a lot of features
+IgnoreRhosts yes
+RhostsRSAAuthentication no
+RSAAuthentication no
+HostbasedAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+PasswordAuthentication no
+UseDNS no
+
+# This makes ansible faster
+PrintMotd no
+PrintLastLog yes
+
+# Use only modern host keys
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Use only modern ciphers
+KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com
