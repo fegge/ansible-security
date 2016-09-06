@@ -1,8 +1,8 @@
 - name: Copy monit alert script
-  copy: src=ssh-alert.py dest=/etc/monit/ssh-alert.py mode="u=rx"
+  copy: src=ssh-alert.py dest=/etc/monit/ssh-alert.py mode="u=rx" owner=root group=root mode=0700
 
 - name: Copy monit ssh login configuration 
-  template: src=monit_config.j2 dest=/etc/monit/conf.d/ssh-logins
+  template: src=monit_config.j2 dest=/etc/monit/conf.d/ssh-logins owner=root group=root mode=0644
 
 - name: Update monit update interval
   lineinfile: dest=/etc/monit/monitrc regexp="^set daemon" line="set daemon 5" state=present
