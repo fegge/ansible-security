@@ -2,7 +2,7 @@
   ufw: state=enabled policy=deny
 
 - name: Allow SSH traffic
-  ufw: rule=allow port=22 proto=tcp
+  ufw: rule=allow port={{ ssh_port }} proto=tcp
       
 - name: Ensure fail2ban is enabled
   service: name=fail2ban state=started enabled=yes
