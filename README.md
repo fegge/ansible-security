@@ -18,11 +18,11 @@ Installs `unattended-upgrades` with minimal settings and adds `Ubuntu {{ ansible
 ## Logging SSH Access
 Installs `monit` and sets the update interval to 5 seconds.
 
-Adds a rule which checks for `Accepted publickey` in the log file _/var/log/auth.log_. If the rule fires, it runs a script which posts server name, user name, and source IP to Slack.
+Adds a rule which checks for `Accepted publickey` in the log file _/var/log/auth.log_. If the rule fires, it runs a script (_ssh-alert.py_) which posts server name, user name, and source IP to Slack.
 
 ## Role Variables
 - `slack_webhook`: Needed to post SSH logins to Slack. Defined in _defaults/main.yml_ and defaults to the empty string. (If the default is not overridden SSH logging is disabled.)
-- `ssh_port`: Set to 22 but can be changed conveniently in case you choose to use a different SSH Port. It is genereally recommended to do so. If you wish not to touch this setting, no action is required.
+- `ssh_port`: Set to 22 by default, but can be changed in case you choose to use a different SSH Port.
 
 ## Example Playbook
 
