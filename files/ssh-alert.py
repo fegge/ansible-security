@@ -18,7 +18,7 @@ def _get_user(description):
     return description[begin: end]
 
 
-def _get_options():
+def _get_webhook_url():
     parser = optparse.OptionParser()
     parser.add_option(
         "--webhook-url",
@@ -30,6 +30,7 @@ def _get_options():
     if options.webhook_url is None:
         parser.error("mandatory argument missing")
     return options.webhook_url
+
 
 def _format_alert():
     hostname = socket.gethostname().title()
