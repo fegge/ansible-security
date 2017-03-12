@@ -11,7 +11,7 @@
     - "/bin"
 
 - name: Minimize access to binary directories
-  file: path="{{ item.stat.path }}' mode="go-w" recurse=yes
+  file: path="{{ item.stat.path }}" mode="go-w" recurse=yes
   when: item.stat.isdir
   with_items: "{{ minimize_access_directories.results }}"
   no_log: true
