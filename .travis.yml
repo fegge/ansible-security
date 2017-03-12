@@ -1,24 +1,72 @@
 language: python
-python: '2.7'
+python: "2.7"
+
 env:
-- SITE=test.yml
+  - SITE=test.yml
+
+branches:
+  only:
+    - master
+
 before_install:
-- sudo apt-get update -qq
+  - sudo apt-get update -qq
+  - ssh-keygen -t rsa -b 2048 -C '' -P '' -f files/id_rsa -q
+
 install:
-- sudo apt-get -y install python-simplejson
-- pip install ansible
-- '{ echo ''[defaults]''; echo ''roles_path = ../''; } >> ansible.cfg'
+  - sudo apt-get -y install python-simplejson
+  - pip install ansible
+  - '{ echo ''[defaults]''; echo ''roles_path = ../''; } >> ansible.cfg'
+
 script:
-- ansible-playbook -i tests/inventory tests/$SITE --syntax-check
-- ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
-- |
-  ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo | grep -q 'changed=0.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
-- grep 'PasswordAuthentication no' /etc/ssh/sshd_config
-- grep 'PermitRootLogin without-password' /etc/ssh/sshd_config
-- grep "Ubuntu `lsb_release -sc`-security" /etc/apt/apt.conf.d/50unattended-upgrades
-- sudo ufw status | grep -w active
-- test -e /etc/monit/ssh-alert.py && (python -m py_compile /etc/monit/ssh-alert.py) || (echo 'Skipping ssh-alert.py syntax verification')
+  # Check the role's syntax.
+  - ansible-playbook -i tests/inventory tests/$SITE --syntax-check
+
+  # Run the role with ansible-playbook.
+  - ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo -vvvv
+
+  # Run the role again, checking to make sure it's idempotent.
+  - >
+    ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+
+  # Check access rights for /bin/su.
+  - >
+    stat -c %A /bin/su | grep -w b'-rwxr-x---'
+    && (echo 'Access rights test: pass' && exit 0)
+    || (echo 'Access rights test: fail' && exit 1)
+
+  # Check sshd configuration file.
+  - >
+    grep 'PasswordAuthentication no' /etc/ssh/sshd_config 
+    && (echo 'Password authentication test: pass' && exit 0)
+    || (echo 'Password authentication test: fail' && exit 1)
+  - >
+    grep 'PermitRootLogin without-password' /etc/ssh/sshd_config
+    && (echo 'SSH root login test: pass' && exit 0)
+    || (echo 'SSH root login test: fail' && exit 1)
+
+  # Check unattended upgrades.
+  - >
+    grep 'Ubuntu `lsb_release -sc`-security' /etc/apt/apt.conf.d/50unattended-upgrades
+    && (echo 'Unattended upgrades test: pass' && exit 0)
+    || (echo 'Unattended upgrades test: fail' && exit 1)
+
+  # Check ufw status.
+  - >
+    sudo ufw status | grep -w active
+    && (echo 'UFW test: pass' && exit 0)
+    || (echo 'UFW test: fail' && exit 1)
+
+  # Check ssh-alert.py syntax.
+  - > 
+    test -e /etc/monit/ssh-alert.py 
+    && (python -m py_compile /etc/monit/ssh-alert.py)
+    || (echo 'Skipping ssh-alert.py syntax verification')
+
 notifications:
+  email: false
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
   slack:
     secure: e678pfBWPOrFlfAMnYVNBl3B2ZIKZVOcUAFmbYXXGNOfzTrE1cEVw2pHxM7PfRPLxU+bNI2oV3WyDQBJYFZwhxteU1bXkrCatQ8Z6FSHA0iQ1cIzjcr7JRrMLwNo6Eur1FntX2378g2g6ADodoGmYKKiVcOs5BE3crpFcc+DiZLVigYNvgqdhE7U9tXoolFdM2kCXzDlIkdUKVCGDBVhyQlKseooJZYVq+kitGAWnditIqQ5cqYEi+QSSqbQqqf999rgz3qbPflvFGSbdvw5UbInLQLhb1oSuiuzsX4phKNQ6wP1L3T1O62KHzsBKySA1T9A1LKzNG918Hvve0Fbryece1XlDV/8Z0BwDy0+kymF3ktcp4W8JZeLNosMxJr/zNl4ViXhVQGj9sGgHcgJaHZQQKwLlwO98zXOC7TZipZkXK6Nr+L1jVdL+lH12j0yqXNs5gL1yhiLX9r75h49CFTPUfElSOgHxz08WA35g57pixk4512T5pLT5RBOqU01/a2ZGfkCccnQuES7aoBc/3NRPwg+qvdmAZQZFtUT8YbZuc5tJ0Pg2bhBnDYLGyfaf0+AE/T6xL/EIcKaPcnZopr8AVwuVV1Z1X1rnBHEuTiLvKn/DvWOfW3vF5SMnSUyEthdxgKhjl/lTx1/o7Ko63JyRjOLGn5ZX6wZz9AXBqA=

@@ -3,24 +3,24 @@
     path: "{{ item }}"
   register: minimize_access_directories
   with_items:
-    - '/usr/local/sbin'
-    - '/usr/local/bin'
-    - '/usr/sbin'
-    - '/usr/bin'
-    - '/sbin'
-    - '/bin'
+    - "/usr/local/sbin"
+    - "/usr/local/bin"
+    - "/usr/sbin"
+    - "/usr/bin"
+    - "/sbin"
+    - "/bin"
 
 - name: Minimize access to binary directories
-  file: path='{{ item.stat.path }}' mode='go-w' recurse=yes
+  file: path="{{ item.stat.path }}' mode="go-w" recurse=yes
   when: item.stat.isdir
   with_items: "{{ minimize_access_directories.results }}"
-  no_log: True
+  no_log: true
 
 - name: Ensure su is only accessible to user and group root
-  file: dest='/bin/su' owner=root group=root mode=0750
+  file: dest="/bin/su" owner=root group=root mode=0750
 
 - name: Change shadow ownership to root and mode to 0600
-  file: dest='/etc/shadow' owner=root group=root mode=0600
+  file: dest="/etc/shadow" owner=root group=root mode=0600
 
 - name: Restrict core dumps (with PAM)
   lineinfile: dest=/etc/security/limits.conf line="* hard core 0" state=present
