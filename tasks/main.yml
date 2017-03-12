@@ -1,3 +1,7 @@
+# Gather facts in case gather_facts was set to 'no' in playbook.
+- name: Gathering facts
+  setup:
+
 - include: apt.yml
 
 - include: pip.yml

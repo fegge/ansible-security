@@ -10,7 +10,6 @@ branches:
 
 before_install:
   - sudo apt-get update -qq
-  - ssh-keygen -t rsa -b 2048 -C '' -P '' -f files/id_rsa -q
 
 install:
   - sudo apt-get -y install python-simplejson
