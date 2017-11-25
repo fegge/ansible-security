@@ -2,15 +2,15 @@
 - name: Gathering facts
   setup:
 
-- include: apt.yml
+- include_tasks: apt.yml
 
-- include: pip.yml
+- include_tasks: pip.yml
     
-- include: ssh.yml
+- include_tasks: ssh.yml
 
-- include: sysctl.yml
+- include_tasks: sysctl.yml
 
-- include: access.yml
+- include_tasks: access.yml
     
-- include: monit.yml
+- include_tasks: monit.yml
   when: not (slack_webhook == "")
